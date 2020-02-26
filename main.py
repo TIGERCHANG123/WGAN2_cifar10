@@ -4,13 +4,13 @@ import tensorflow as tf
 from WGAN import get_gan
 from show_pic import draw
 from Train import train_one_epoch
-from datasets.oxford_102_flowers_tfds import oxford_102_flowers_dataset
+from datasets.oxford_102_64 import oxford_102_flowers_dataset
 from tensorflow.compat.v1 import ConfigProto
 from tensorflow.compat.v1 import InteractiveSession
 
 ubuntu_root='/home/tigerc'
 windows_root='D:/Automatic/SRTP/GAN'
-root = '/content/WGAN2'
+root = ubuntu_root
 temp_root = root+'/temp'
 
 def main(continue_train, train_time):
@@ -40,13 +40,13 @@ def main(continue_train, train_time):
     train = train_one_epoch(model=[generator_model, discriminator_model], train_dataset=train_dataset,
               optimizers=[generator_optimizer, discriminator_optimizer], metrics=[gen_loss, disc_loss], noise_dim=noise_dim, gp=20)
 
-    for epoch in range(1000):
+    for epoch in range(100):
         train.train(epoch=epoch, pic=pic)
         pic.show()
         if (epoch + 1) % 5 == 0:
             ckpt_manager.save()
         pic.save_created_pic(generator_model, 8, noise_dim, epoch)
-        pic.show_created_pic(generator_model, 8, noise_dim)
+    pic.show_created_pic(generator_model, 8, noise_dim)
     return
 
 if __name__ == '__main__':
@@ -54,4 +54,4 @@ if __name__ == '__main__':
     config.gpu_options.allow_growth = True
     session = InteractiveSession(config=config)
 
-    main(continue_train=True, train_time=0)
+    main(continue_train=False, train_time=0)

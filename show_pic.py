@@ -84,7 +84,8 @@ class draw:
     for i in range(pic_num):
       plt.subplot(1, pic_num, i + 1)
       y = (y + 1) / 2
-      plt.imshow(y[i].numpy().reshape(28, 28).numpy())
+      y = tf.squeeze(y)
+      plt.imshow(y[i].numpy())
       plt.axis('off')
       plt.tight_layout()
     plt.show()

@@ -12,7 +12,7 @@ ubuntu_root='/home/tigerc'
 windows_root='D:/Automatic/SRTP/GAN'
 root = '/content/drive/My Drive'
 temp_root = root+'/temp'
-dtaset_root = '/content/drive/Shared drives/tigerc'
+dataset_root = '/content/drive/Shared drives/tigerc'
 
 def main(continue_train, train_time):
     os.environ['TF_CPP_MIN_LOG_LEVEL'] = '2'  # or any {'0', '1', '2'}
@@ -20,7 +20,7 @@ def main(continue_train, train_time):
     batch_size = 128
 
     generator_model, discriminator_model, model_name = get_gan()
-    dataset = oxford_102_flowers_dataset(root, batch_size)
+    dataset = oxford_102_flowers_dataset(dataset_root, batch_size)
     model_dataset = model_name + '-' + dataset.name
 
     train_dataset = dataset.get_train_dataset()

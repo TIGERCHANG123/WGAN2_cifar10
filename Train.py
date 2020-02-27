@@ -49,11 +49,12 @@ class train_one_epoch():
         self.gen_loss.reset_states()
         self.disc_loss.reset_states()
 
-        for (batch, (images, labels)) in enumerate(self.train_dataset):
-            noise = tf.random.normal([images.shape[0], self.noise_dim])
-            self.train_step(noise, images)
-            pic.add([self.gen_loss.result().numpy(), self.disc_loss.result().numpy()])
-            pic.save()
-            if batch % 100 == 0:
-                print('epoch: {}, gen loss: {}, disc loss: {}, grad penalty: {}, real loss: {}, fake loss: {}'
-                      .format(epoch, self.gen_loss.result(), self.disc_loss.result(), self.grad_penalty, self.real_loss, self.fake_loss))
+        for dataset in self.train_dataset:
+            for (batch, (images, labels)) in enumerate(dataset):
+                noise = tf.random.normal([images.shape[0], self.noise_dim])
+                self.train_step(noise, images)
+                pic.add([self.gen_loss.result().numpy(), self.disc_loss.result().numpy()])
+                pic.save()
+                if batch % 100 == 0:
+                    print('epoch: {}, gen loss: {}, disc loss: {}, grad penalty: {}, real loss: {}, fake loss: {}'
+                          .format(epoch, self.gen_loss.result(), self.disc_loss.result(), self.grad_penalty, self.real_loss, self.fake_loss))

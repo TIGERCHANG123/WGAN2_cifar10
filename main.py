@@ -4,7 +4,7 @@ import tensorflow as tf
 from WGAN import get_gan
 from show_pic import draw
 from Train import train_one_epoch
-from datasets.cifar10 import mnist_dataset
+from datasets.oxford_102_flowers import oxford_102_flowers_dataset
 from tensorflow.compat.v1 import ConfigProto
 from tensorflow.compat.v1 import InteractiveSession
 
@@ -12,13 +12,15 @@ ubuntu_root='/home/tigerc'
 windows_root='D:/Automatic/SRTP/GAN'
 root = '/content/drive/My Drive/my_network'
 temp_root = root+'/temp'
+dtaset_root = '/content/drive/Shared\ drives/tigerc'
 
 def main(continue_train, train_time):
     os.environ['TF_CPP_MIN_LOG_LEVEL'] = '2'  # or any {'0', '1', '2'}
     noise_dim = 100
+    batch_size = 128
 
     generator_model, discriminator_model, model_name = get_gan()
-    dataset = mnist_dataset(root, noise_dim)
+    dataset = oxford_102_flowers_dataset(root, batch_size)
     model_dataset = model_name + '-' + dataset.name
 
     train_dataset = dataset.get_train_dataset()

@@ -10,7 +10,7 @@ from tensorflow.compat.v1 import InteractiveSession
 
 ubuntu_root='/home/tigerc'
 windows_root='D:/Automatic/SRTP/GAN'
-root = '/content/WGAN2'
+root = '/content/drive/My Drive/my_network/WGAN-oxford102-flowers'
 temp_root = root+'/temp'
 
 def main(continue_train, train_time):

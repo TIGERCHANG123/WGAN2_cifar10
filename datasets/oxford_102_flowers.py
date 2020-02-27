@@ -9,6 +9,7 @@ class oxford_102_flowers_dataset():
         self.image_width = 128
         self.batch_size = batch_size
         self.file_list = os.listdir(self.file_path)
+        print(len(file_list))
         self.name = 'oxford-102-flowers'
     def generator(self):
         for name in self.file_list:

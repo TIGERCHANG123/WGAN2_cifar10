@@ -56,4 +56,4 @@ if __name__ == '__main__':
     config.gpu_options.allow_growth = True
     session = InteractiveSession(config=config)
 
-    main(continue_train=True, train_time=0)
+    main(continue_train=True, train_time=1)

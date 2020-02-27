@@ -12,7 +12,8 @@ class oxford_102_flowers_dataset():
         self.name = 'oxford-102-flowers'
     def generator(self):
         for name in self.file_list:
-            img = cv2.imread('{}/{}'.format(self.file_path, name), 1)
+          img = cv2.imread('{}/{}'.format(self.file_path, name), 1)
+          if not img is None:
             img = cv2.resize(img, (self.image_width, self.image_width), interpolation=cv2.INTER_AREA)
             b, g, r = cv2.split(img)
             img = cv2.merge([r, g, b])

@@ -19,7 +19,7 @@ class generator_Input(tf.keras.Model):
 class generator_Middle(tf.keras.Model):
   def __init__(self, filters, strides):
       super(generator_Middle, self).__init__()
-      self.conv = layers.Conv2DTranspose(filters, (5, 5), strides=strides, padding='same', use_bias=False)
+      self.conv = layers.Conv2DTranspose(filters, kernel_size=5, strides=strides, padding='same', use_bias=False)
       self.bn = layers.BatchNormalization(momentum=0.9)
       self.relu = tf.keras.layers.ReLU()
   def call(self, x):
@@ -31,7 +31,7 @@ class generator_Middle(tf.keras.Model):
 class generator_Output(tf.keras.Model):
   def __init__(self, image_depth, strides):
     super(generator_Output, self).__init__()
-    self.conv = layers.Conv2DTranspose(image_depth, (5, 5), strides=strides, padding='same', use_bias=False)
+    self.conv = layers.Conv2DTranspose(image_depth, kernel_size=5, strides=strides, padding='same', use_bias=False)
     self.actv = layers.Activation(activation='tanh')
   def call(self, x):
     x = self.conv(x)

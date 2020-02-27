@@ -31,6 +31,10 @@ class noise_generator():
         self.noise_dim = noise_dim
         self.digit_dim = digit_dim
         self.batch_size = batch_size
+    def __call__(self):
+        noise = tf.random.normal([self.batch_size, self.noise_dim])
+        noise = tf.cast(noise, tf.float32)
+        yield noise
     def get_noise(self):
         noise = tf.random.normal([self.batch_size, self.noise_dim])
         noise = tf.cast(noise, tf.float32)

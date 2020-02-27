@@ -70,7 +70,7 @@ class draw:
     ax1.set(xlabel='batches',ylabel='loss', title = 'gen_loss')
     ax2.set(xlabel='batches',ylabel='loss', title = 'disc_loss')
 
-    plt.savefig(file_path+'/{}.png'.format(str(self.i)))
+    plt.savefig(file_path+'/{}_{}.png'.format(self.train_time, str(self.i)))
     # thread1 = Thread(target=self.close, args=(1,))
     # thread1.start()
     # plt.show()
@@ -81,10 +81,11 @@ class draw:
   def show_created_pic(self, generator, pic_num, noise_dim):
     x = tf.convert_to_tensor(np.random.rand(pic_num, noise_dim))
     y = generator(x)
+    # print(y.shape)
     for i in range(pic_num):
       plt.subplot(1, pic_num, i + 1)
       y = (y + 1) / 2
-      plt.imshow(y[i].numpy().reshape(28, 28).numpy())
+      plt.imshow(y[i].numpy())
       plt.axis('off')
       plt.tight_layout()
     plt.show()
@@ -96,5 +97,5 @@ class draw:
     y=tf.squeeze(y)
     y = (y + 1) / 2
     for i in range(pic_num):
-      plt.imsave(self.generated_pic_path+'/{}_{}.png'.format(epoch, i), y[i].numpy())
+      plt.imsave(self.generated_pic_path+'/{}_{}_{}.png'.format(self.train_time, epoch, i), y[i].numpy())
     return

@@ -3,7 +3,7 @@ from WGAN_Block import *
 class generator(tf.keras.Model):
   def __init__(self):
     super(generator, self).__init__()
-    self.input_layer = generator_Input(shape=[4, 4, 512])
+    self.input_layer = generator_Input(shape=[8, 8, 512])
 
     self.middle_layer_list = [
       # generator_Middle(filters=512, strides=2),
@@ -28,7 +28,8 @@ class discriminator(tf.keras.Model):
 
     self.middle_layer_list = [
       discriminator_Middle(filters=128, strides=2),
-      discriminator_Middle(filters=256, strides=2)
+      discriminator_Middle(filters=256, strides=2),
+      # discriminator_Middle(filters=512, strides=2),
     ]
     self.output_layer = discriminator_Output(with_activation=False)
 

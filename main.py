@@ -43,7 +43,7 @@ def main(continue_train, train_time):
               optimizers=[generator_optimizer, discriminator_optimizer], metrics=[gen_loss, disc_loss], noise_dim=noise_dim, gp=20)
 
     for epoch in range(1000):
-        train.train(epoch=epoch, pic=pic)
+        train.train(epoch=epoch, pic=pic, ckpt=ckpt_manager)
         pic.show()
         if (epoch + 1) % 5 == 0:
             ckpt_manager.save()

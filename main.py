@@ -17,7 +17,7 @@ dataset_root = '/content'
 def main(continue_train, train_time):
     os.environ['TF_CPP_MIN_LOG_LEVEL'] = '2'  # or any {'0', '1', '2'}
     noise_dim = 100
-    batch_size = 128
+    batch_size = 96
 
     generator_model, discriminator_model, model_name = get_gan()
     dataset = oxford_102_flowers_dataset(dataset_root, batch_size)

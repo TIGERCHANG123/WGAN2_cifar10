@@ -168,7 +168,7 @@ class FrechetInceptionDistance(object):
         mean = np.zeros(self._pool_size)
         cov = np.zeros((self._pool_size, self._pool_size))
         N = 0
-
+        pool_list = []
         for i in range(num_batches):
             try:
                 # draw a batch from generator input iterator
@@ -188,6 +188,7 @@ class FrechetInceptionDistance(object):
                 batch = postprocessing(batch)
             batch = self._preprocess(batch)
             pool = self._inception_v3.predict(batch, batch_size=batch_size)
+            pool_list.append(pool)
             print('pool shape: {}'.format(pool.shape))
             (mean, cov, N) = update_mean_cov(mean, cov, N, pool)
 
@@ -213,7 +214,7 @@ class FrechetInceptionDistance(object):
             num_batches_gen = num_batches_real
         (gen_mean, gen_cov) = self._stats(generator_inputs,
                                           "generated", batch_size=batch_size, num_batches=num_batches_gen,
-                                          postprocessing=self.postprocessing,
+                                          postprocessing=None,
                                           shuffle=shuffle, seed=seed)
         print('gen mean: {}, gen cov: {}'.format(gen_mean, gen_cov))
         return frechet_distance(real_mean, real_cov, gen_mean, gen_cov)

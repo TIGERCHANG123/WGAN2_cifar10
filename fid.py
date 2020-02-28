@@ -3,7 +3,7 @@ import warnings
 from tensorflow.keras.applications.inception_v3 import InceptionV3
 from tensorflow.keras import backend as K
 import numpy as np
-
+import cv2
 
 def update_mean_cov(mean, cov, N, batch):
     batch_N = batch.shape[0]
@@ -16,7 +16,6 @@ def update_mean_cov(mean, cov, N, batch):
     cov = ((N - batch_N) / N) * cov + x_norm_old.T.dot(x_norm_new) / N
 
     return (mean, cov, N)
-
 
 def frechet_distance(mean1, cov1, mean2, cov2):
     """Frechet distance between two multivariate Gaussians.
@@ -125,16 +124,20 @@ class FrechetInceptionDistance(object):
         The Frechet Inception Distance between the real and generated data.
     """
 
-    def __init__(self, generator, image_range, input_shape,
-                 generator_postprocessing=None):
+    def __init__(self, generator, image_range, input_shape):
 
         self._inception_v3 = None
         self.input_shape = input_shape
         self.generator = generator
-        self.generator_postprocessing = generator_postprocessing
         self.image_range = image_range
         self._channels_axis = \
             -1 if K.image_data_format() == "channels_last" else -3
+
+    def postprocessing(self, img):
+        img = cv2.resize(img, (self.input_shape[0], self.input_shape[1]), interpolation=cv2.INTER_AREA)
+        b, g, r = cv2.split(img)
+        img = cv2.merge([r, g, b])
+        return img
 
     def _setup_inception_network(self):
         self._inception_v3 = InceptionV3(
@@ -200,7 +203,7 @@ class FrechetInceptionDistance(object):
             num_batches_gen = num_batches_real
         (gen_mean, gen_cov) = self._stats(generator_inputs,
                                           "generated", batch_size=batch_size, num_batches=num_batches_gen,
-                                          postprocessing=self.generator_postprocessing,
+                                          postprocessing=self.postprocessing,
                                           shuffle=shuffle, seed=seed)
         print('gen mean: {}, gen cov: {}'.format(gen_mean, gen_cov))
         return frechet_distance(real_mean, real_cov, gen_mean, gen_cov)

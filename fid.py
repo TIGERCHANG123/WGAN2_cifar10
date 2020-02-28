@@ -144,7 +144,9 @@ class FrechetInceptionDistance(object):
             img_list.append(img)
         img_list = np.asarray(img_list)
         return img_list
-    def inception_score(self, pool):
+    def inception_score(self, pool_list):
+        pool = np.asarray(pool_list)
+        pool = tf.convert_to_tensor(pool)
         mean = tf.reduce_mean(pool)
         D_kl = tf.reduce_sum(pool*tf.math.log(pool/mean))
         return tf.reduce_mean(tf.math.exp(D_kl))
@@ -188,9 +190,12 @@ class FrechetInceptionDistance(object):
                 batch = postprocessing(batch)
             batch = self._preprocess(batch)
             pool = self._inception_v3.predict(batch, batch_size=batch_size)
-            pool_list.append(pool)
+            if input_type == "generated":
+                pool_list.append(pool)
             print('pool shape: {}'.format(pool.shape))
             (mean, cov, N) = update_mean_cov(mean, cov, N, pool)
+        if input_type == "generated":
+            inception_score = self.inception_score(pool_list)
 
         return (mean, cov)
 

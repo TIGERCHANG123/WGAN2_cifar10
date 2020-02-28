@@ -11,11 +11,11 @@ from tensorflow.compat.v1 import InteractiveSession
 
 ubuntu_root='/home/tigerc'
 windows_root='D:/Automatic/SRTP/GAN'
-root = '/content/drive/My Drive'
-# root = ubuntu_root
+# root = '/content/drive/My Drive'
+root = ubuntu_root
 temp_root = root+'/temp'
-dataset_root = '/content'
-# dataset_root = root
+# dataset_root = '/content'
+dataset_root = root
 
 def main(continue_train, train_time):
     os.environ['TF_CPP_MIN_LOG_LEVEL'] = '2'  # or any {'0', '1', '2'}
@@ -53,14 +53,12 @@ def main(continue_train, train_time):
         pic.save_created_pic(generator_model, 8, noise_dim, epoch)
     # pic.show_created_pic(generator_model, 8, noise_dim)
 
-
     # fid score
     gen = generator_model
-    noise = noise_generator(noise_dim, 10, batch_size)()
+    noise = noise_generator(noise_dim, 10, batch_size, dataset.total_pic_num//batch_size)()
     real_images = dataset.get_train_dataset()
-
     fd = fid.FrechetInceptionDistance(gen, (-1, 1), [128, 128, 3])
-    gan_fid = fd(iter(real_images), noise, batch_size=batch_size, num_batches_real=8189//batch_size-1)
+    gan_fid = fd(iter(real_images), noise, batch_size=batch_size, num_batches_real=dataset.total_pic_num//batch_size)
     print('fid score: {}'.format(gan_fid))
 
     return

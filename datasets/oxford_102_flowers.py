@@ -9,6 +9,7 @@ class oxford_102_flowers_dataset():
         self.image_width = 128
         self.batch_size = batch_size
         self.file_list = os.listdir(self.file_path)
+        self.total_pic_num = len(self.file_list)
         print('total images: {}'.format(len(self.file_list)))
         self.name = 'oxford-102-flowers'
     def generator(self):
@@ -29,14 +30,16 @@ class oxford_102_flowers_dataset():
         return train
 
 class noise_generator():
-    def __init__(self, noise_dim, digit_dim, batch_size):
+    def __init__(self, noise_dim, digit_dim, batch_size, iter_num):
         self.noise_dim = noise_dim
         self.digit_dim = digit_dim
         self.batch_size = batch_size
+        self.iter_num = iter_num
     def __call__(self):
-        noise = tf.random.normal([self.batch_size, self.noise_dim])
-        noise = tf.cast(noise, tf.float32)
-        yield noise
+        for i in range(self.iter_num):
+            noise = tf.random.normal([self.batch_size, self.noise_dim])
+            noise = tf.cast(noise, tf.float32)
+            yield noise
     def get_noise(self):
         noise = tf.random.normal([self.batch_size, self.noise_dim])
         noise = tf.cast(noise, tf.float32)

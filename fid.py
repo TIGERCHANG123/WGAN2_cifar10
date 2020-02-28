@@ -135,7 +135,6 @@ class FrechetInceptionDistance(object):
 
     def postprocessing(self, img):
         img = cv2.resize(img, (self.input_shape[0], self.input_shape[1]), interpolation=cv2.INTER_AREA)
-        print(img.shape)
         b, g, r = cv2.split(img)
         img = cv2.merge([r, g, b])
         return img
@@ -175,10 +174,12 @@ class FrechetInceptionDistance(object):
 
             if input_type == "generated":
                 batch = self.generator.predict(batch)
+                print('generated image shape: {}'.format(batch.shape))
             if postprocessing is not None:
                 batch = postprocessing(batch)
             batch = self._preprocess(batch)
             pool = self._inception_v3.predict(batch, batch_size=batch_size)
+
 
             (mean, cov, N) = update_mean_cov(mean, cov, N, pool)
 

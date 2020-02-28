@@ -195,11 +195,12 @@ class FrechetInceptionDistance(object):
         (real_mean, real_cov) = self._stats(real_images,
                                             "real", batch_size=batch_size, num_batches=num_batches_real,
                                             shuffle=shuffle, seed=seed)
+        print('real mean: {}, real cov: {}'.format(real_mean, real_cov))
         if num_batches_gen is None:
             num_batches_gen = num_batches_real
         (gen_mean, gen_cov) = self._stats(generator_inputs,
                                           "generated", batch_size=batch_size, num_batches=num_batches_gen,
                                           postprocessing=self.generator_postprocessing,
                                           shuffle=shuffle, seed=seed)
-
+        print('gen mean: {}, gen cov: {}'.format(gen_mean, gen_cov))
         return frechet_distance(real_mean, real_cov, gen_mean, gen_cov)

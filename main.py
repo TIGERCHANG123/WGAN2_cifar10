@@ -17,7 +17,7 @@ temp_root = root+'/temp'
 def main(continue_train, train_time):
     os.environ['TF_CPP_MIN_LOG_LEVEL'] = '2'  # or any {'0', '1', '2'}
     noise_dim = 100
-    batch_size = 48
+    batch_size = 38
 
     generator_model, discriminator_model, model_name = get_gan()
     dataset = oxford_102_flowers_dataset(root,batch_size=batch_size)
@@ -25,8 +25,8 @@ def main(continue_train, train_time):
 
     train_dataset = dataset.get_train_dataset()
     pic = draw(10, temp_root, model_dataset, train_time=train_time)
-    generator_optimizer = tf.keras.optimizers.Adam(2e-4, beta_1=0.5)
-    discriminator_optimizer = tf.keras.optimizers.Adam(2e-4, beta_1=0.5)
+    generator_optimizer = tf.keras.optimizers.RMSprop(5e-5)
+    discriminator_optimizer = tf.keras.optimizers.RMSprop(5e-5)
 
     checkpoint_path = temp_root + '/temp_model_save/' + model_dataset
     ckpt = tf.train.Checkpoint(genetator_optimizers=generator_optimizer, discriminator_optimizer=discriminator_optimizer ,
@@ -42,23 +42,22 @@ def main(continue_train, train_time):
     train = train_one_epoch(model=[generator_model, discriminator_model], train_dataset=train_dataset,
               optimizers=[generator_optimizer, discriminator_optimizer], metrics=[gen_loss, disc_loss], noise_dim=noise_dim, gp=20)
 
-    for epoch in range(200):
+    for epoch in range(0):
         train.train(epoch=epoch, pic=pic)
         pic.show()
         if (epoch + 1) % 5 == 0:
             ckpt_manager.save()
         pic.save_created_pic(generator_model, 8, noise_dim, epoch)
-    pic.show_created_pic(generator_model, 8, noise_dim)
+    # pic.show_created_pic(generator_model, 8, noise_dim)
 
-    # # fid score
-    # gen = generator_model
-    # noise = noise_generator(noise_dim, 10, batch_size)()
-    # real_images = dataset.get_train_dataset()
-    #
-    #
-    # fd = fid.FrechetInceptionDistance(gen, (-1, 1), [128, 128, 3])
-    # gan_fid = fd(iter(real_images), noise)
-    # print('fid score: {}'.format(gan_fid))
+    # fid score
+    gen = generator_model
+    noise = noise_generator(noise_dim, 10, batch_size)()
+    real_images = dataset.get_train_dataset()
+
+    fd = fid.FrechetInceptionDistance(gen, (-1, 1), [128, 128, 3])
+    gan_fid = fd(iter(real_images), noise)
+    print('fid score: {}'.format(gan_fid))
 
     return
 if __name__ == '__main__':
@@ -66,4 +65,4 @@ if __name__ == '__main__':
     config.gpu_options.allow_growth = True
     session = InteractiveSession(config=config)
 
-    main(continue_train=False, train_time=0)
+    main(continue_train=True, train_time=1)

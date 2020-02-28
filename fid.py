@@ -135,6 +135,7 @@ class FrechetInceptionDistance(object):
 
     def postprocessing(self, img):
         img = cv2.resize(img, (self.input_shape[0], self.input_shape[1]), interpolation=cv2.INTER_AREA)
+        print(img.shape)
         b, g, r = cv2.split(img)
         img = cv2.merge([r, g, b])
         return img

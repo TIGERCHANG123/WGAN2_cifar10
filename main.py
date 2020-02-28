@@ -5,7 +5,7 @@ from WGAN import get_gan
 from show_pic import draw
 import fid
 from Train import train_one_epoch
-from datasets.oxford_102_flowers import oxford_102_flowers_dataset, noise_generator
+from datasets.cifar10 import mnist_dataset
 from tensorflow.compat.v1 import ConfigProto
 from tensorflow.compat.v1 import InteractiveSession
 
@@ -23,7 +23,7 @@ def main(continue_train, train_time):
     batch_size = 128
 
     generator_model, discriminator_model, model_name = get_gan()
-    dataset = oxford_102_flowers_dataset(dataset_root,batch_size=batch_size)
+    dataset = mnist_dataset(dataset_root,batch_size = batch_size)
     model_dataset = model_name + '-' + dataset.name
 
     train_dataset = dataset.get_train_dataset()
@@ -45,21 +45,21 @@ def main(continue_train, train_time):
     train = train_one_epoch(model=[generator_model, discriminator_model], train_dataset=train_dataset,
               optimizers=[generator_optimizer, discriminator_optimizer], metrics=[gen_loss, disc_loss], noise_dim=noise_dim, gp=20)
 
-    for epoch in range(0):
+    for epoch in range(1000):
         train.train(epoch=epoch, pic=pic)
         pic.show()
         if (epoch + 1) % 5 == 0:
             ckpt_manager.save()
         pic.save_created_pic(generator_model, 8, noise_dim, epoch)
-    # pic.show_created_pic(generator_model, 8, noise_dim)
+    pic.show_created_pic(generator_model, 8, noise_dim)
 
-    # fid score
-    gen = generator_model
-    noise = noise_generator(noise_dim, 10, batch_size, dataset.total_pic_num//batch_size)()
-    real_images = dataset.get_train_dataset()
-    fd = fid.FrechetInceptionDistance(gen, (-1, 1), [128, 128, 3])
-    gan_fid, gan_is = fd(iter(real_images), noise, batch_size=batch_size, num_batches_real=dataset.total_pic_num//batch_size)
-    print('fid score: {}, inception score: {}'.format(gan_fid, gan_is))
+    # # fid score
+    # gen = generator_model
+    # noise = noise_generator(noise_dim, 10, batch_size, dataset.total_pic_num//batch_size)()
+    # real_images = dataset.get_train_dataset()
+    # fd = fid.FrechetInceptionDistance(gen, (-1, 1), [128, 128, 3])
+    # gan_fid, gan_is = fd(iter(real_images), noise, batch_size=batch_size, num_batches_real=dataset.total_pic_num//batch_size)
+    # print('fid score: {}, inception score: {}'.format(gan_fid, gan_is))
 
     return
 if __name__ == '__main__':

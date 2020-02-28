@@ -147,9 +147,9 @@ class FrechetInceptionDistance(object):
     def inception_score(self, pool_list):
         pool = np.asarray(pool_list)
         pool = tf.convert_to_tensor(pool)
-        mean = tf.reduce_mean(pool)
-        D_kl = tf.reduce_sum(pool*tf.math.log(pool/mean))
-        return tf.reduce_mean(tf.math.exp(D_kl))
+        mean = tf.reduce_mean(pool, axis=0)
+        D_kl = tf.reduce_sum(pool*tf.math.log(pool/mean), axis=1)
+        return tf.reduce_mean(tf.math.exp(D_kl), axis=0)
     def _setup_inception_network(self):
         self._inception_v3 = InceptionV3(
             include_top=False, pooling='avg', input_shape=self.input_shape)
@@ -171,6 +171,7 @@ class FrechetInceptionDistance(object):
         cov = np.zeros((self._pool_size, self._pool_size))
         N = 0
         pool_list = []
+        inception_score=0
         for i in range(num_batches):
             try:
                 # draw a batch from generator input iterator
@@ -197,7 +198,7 @@ class FrechetInceptionDistance(object):
         if input_type == "generated":
             inception_score = self.inception_score(pool_list)
 
-        return (mean, cov)
+        return (mean, cov, inception_score)
 
     def __call__(self,
                  real_images,
@@ -211,15 +212,15 @@ class FrechetInceptionDistance(object):
 
         if self._inception_v3 is None:
             self._setup_inception_network()
-        (real_mean, real_cov) = self._stats(real_images,
+        (real_mean, real_cov, _) = self._stats(real_images,
                                             "real", batch_size=batch_size, num_batches=num_batches_real,
                                             shuffle=shuffle, seed=seed)
         print('real mean: {}, real cov: {}'.format(real_mean, real_cov))
         if num_batches_gen is None:
             num_batches_gen = num_batches_real
-        (gen_mean, gen_cov) = self._stats(generator_inputs,
+        (gen_mean, gen_cov, inception_score) = self._stats(generator_inputs,
                                           "generated", batch_size=batch_size, num_batches=num_batches_gen,
                                           postprocessing=None,
                                           shuffle=shuffle, seed=seed)
         print('gen mean: {}, gen cov: {}'.format(gen_mean, gen_cov))
-        return frechet_distance(real_mean, real_cov, gen_mean, gen_cov)
+        return frechet_distance(real_mean, real_cov, gen_mean, gen_cov), inception_score

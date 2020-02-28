@@ -58,8 +58,8 @@ def main(continue_train, train_time):
     noise = noise_generator(noise_dim, 10, batch_size, dataset.total_pic_num//batch_size)()
     real_images = dataset.get_train_dataset()
     fd = fid.FrechetInceptionDistance(gen, (-1, 1), [128, 128, 3])
-    gan_fid = fd(iter(real_images), noise, batch_size=batch_size, num_batches_real=dataset.total_pic_num//batch_size)
-    print('fid score: {}'.format(gan_fid))
+    gan_fid, gan_is = fd(iter(real_images), noise, batch_size=batch_size, num_batches_real=dataset.total_pic_num//batch_size)
+    print('fid score: {}, inception score: {}'.format(gan_fid, gan_is))
 
     return
 if __name__ == '__main__':

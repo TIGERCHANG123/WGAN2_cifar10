@@ -133,12 +133,17 @@ class FrechetInceptionDistance(object):
         self._channels_axis = \
             -1 if K.image_data_format() == "channels_last" else -3
 
-    def postprocessing(self, img):
-        print(img.shape)
-        img = cv2.resize(img, (self.input_shape[0], self.input_shape[1]), interpolation=cv2.INTER_AREA)
-        b, g, r = cv2.split(img)
-        img = cv2.merge([r, g, b])
-        return img
+    def postprocessing(self, imgs):
+        print(imgs.shape)
+        img_list = []
+        for i in range(imgs.shape[0]):
+            img = imgs[i]
+            img = cv2.resize(img, (self.input_shape[0], self.input_shape[1]), interpolation=cv2.INTER_AREA)
+            b, g, r = cv2.split(img)
+            img = cv2.merge([r, g, b])
+            img_list.append(img)
+        img_list = np.asarray(img_list)
+        return img_list
     def inception_score(self, pool):
         mean = tf.reduce_mean(pool)
         D_kl = tf.reduce_sum(pool*tf.math.log(pool/mean))
@@ -183,7 +188,7 @@ class FrechetInceptionDistance(object):
                 batch = postprocessing(batch)
             batch = self._preprocess(batch)
             pool = self._inception_v3.predict(batch, batch_size=batch_size)
-
+            print('pool shape: {}'.format(pool.shape))
             (mean, cov, N) = update_mean_cov(mean, cov, N, pool)
 
         return (mean, cov)

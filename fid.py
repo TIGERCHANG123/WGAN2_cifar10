@@ -179,7 +179,7 @@ class FrechetInceptionDistance(object):
                 batch = postprocessing(batch)
             batch = self._preprocess(batch)
             pool = self._inception_v3.predict(batch, batch_size=batch_size)
-
+            print('pool shape: {}'.format(pool.shape))
 
             (mean, cov, N) = update_mean_cov(mean, cov, N, pool)
 

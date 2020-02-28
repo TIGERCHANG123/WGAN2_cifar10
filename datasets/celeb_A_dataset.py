@@ -3,14 +3,14 @@ import numpy as np
 import os
 import cv2
 
-class oxford_102_flowers_dataset():
+class celeb_a_dataset():
     def __init__(self, root, batch_size):
-        self.file_path = root + '/datasets/oxford-102-flowers/jpg'
+        self.file_path = root + '/datasets/celeb_a/img_align_celeba'
         self.image_width = 128
         self.batch_size = batch_size
         self.file_list = os.listdir(self.file_path)
         print('total images: {}'.format(len(self.file_list)))
-        self.name = 'oxford-102-flowers'
+        self.name = 'celeb_A'
     def generator(self):
         for name in self.file_list:
           img = cv2.imread('{}/{}'.format(self.file_path, name), 1)
@@ -33,10 +33,6 @@ class noise_generator():
         self.noise_dim = noise_dim
         self.digit_dim = digit_dim
         self.batch_size = batch_size
-    def __call__(self):
-        noise = tf.random.normal([self.batch_size, self.noise_dim])
-        noise = tf.cast(noise, tf.float32)
-        yield noise
     def get_noise(self):
         noise = tf.random.normal([self.batch_size, self.noise_dim])
         noise = tf.cast(noise, tf.float32)

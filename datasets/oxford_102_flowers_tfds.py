@@ -23,7 +23,7 @@ class oxford_102_flowers_dataset():
         #         return self.dataset
         train = self.dataset['train'].map(self.parse).shuffle(1000).batch(self.batch_size)
         test = self.dataset['test'].map(self.parse).shuffle(1000).batch(self.batch_size)
-        valid = self.dataset['valid'].map(self.parse).shuffle(1000).batch(self.batch_size)
+        valid = self.dataset['validation'].map(self.parse).shuffle(1000).batch(self.batch_size)
         return train, test, valid
 
 class noise_generator():

@@ -148,12 +148,10 @@ class FrechetInceptionDistance(object):
     def inception_score(self, pool_list):
         pool = np.asarray(pool_list)
         pool = tf.convert_to_tensor(pool)
-        mean = tf.reduce_mean(pool, axis=0)
-        mean = tf.reduce_mean(mean, axis=0)
+        mean = tf.reduce_mean(pool, axis=[0, 1])
         print(mean.shape)
         print(mean)
-        D_kl = tf.reduce_sum(pool*tf.math.log(pool/mean), axis=1)
-        D_kl = tf.reduce_sum(D_kl, axis=0)
+        D_kl = tf.reduce_mean(pool*tf.math.log(pool/mean), axis=[0, 1])
         return tf.math.exp(tf.reduce_mean((D_kl), axis=0))
     def _setup_inception_network(self):
         self._inception_v3 = InceptionV3(

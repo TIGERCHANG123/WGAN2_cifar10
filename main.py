@@ -21,7 +21,7 @@ def main(continue_train, train_time):
     batch_size = 38
 
     generator_model, discriminator_model, model_name = get_gan()
-    dataset = oxford_102_flowers_dataset(root,batch_size=batch_size)
+    dataset = oxford_102_flowers_dataset(dataset_root,batch_size=batch_size)
     model_dataset = model_name + '-' + dataset.name
 
     train_dataset = dataset.get_train_dataset()

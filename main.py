@@ -50,6 +50,7 @@ def main(continue_train, train_time):
         pic.save_created_pic(generator_model, 8, noise_dim, epoch)
     # pic.show_created_pic(generator_model, 8, noise_dim)
 
+
     # fid score
     gen = generator_model
     noise = noise_generator(noise_dim, 10, batch_size)()

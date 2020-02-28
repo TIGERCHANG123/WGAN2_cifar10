@@ -193,7 +193,8 @@ class FrechetInceptionDistance(object):
         batch_size = self.batch_size
         if self._inception_v3 is None:
             self._setup_inception_network()
-
+        print(real_images.shape)
+        print(generator_inputs.shape)
         (real_mean, real_cov) = self._stats(real_images,
                                             "real", batch_size=batch_size, num_batches=num_batches_real,
                                             shuffle=shuffle, seed=seed)

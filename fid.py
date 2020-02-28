@@ -1,5 +1,5 @@
 import warnings
-
+import tensorflow as tf
 from tensorflow.keras.applications.inception_v3 import InceptionV3
 from tensorflow.keras import backend as K
 import numpy as np
@@ -134,11 +134,15 @@ class FrechetInceptionDistance(object):
             -1 if K.image_data_format() == "channels_last" else -3
 
     def postprocessing(self, img):
+        print(img.shape)
         img = cv2.resize(img, (self.input_shape[0], self.input_shape[1]), interpolation=cv2.INTER_AREA)
         b, g, r = cv2.split(img)
         img = cv2.merge([r, g, b])
         return img
-
+    def inception_score(self, pool):
+        mean = tf.reduce_mean(pool)
+        D_kl = tf.reduce_sum(pool*tf.math.log(pool/mean))
+        return tf.reduce_mean(tf.math.exp(D_kl))
     def _setup_inception_network(self):
         self._inception_v3 = InceptionV3(
             include_top=False, pooling='avg', input_shape=self.input_shape)
@@ -179,7 +183,6 @@ class FrechetInceptionDistance(object):
                 batch = postprocessing(batch)
             batch = self._preprocess(batch)
             pool = self._inception_v3.predict(batch, batch_size=batch_size)
-            print('pool shape: {}'.format(pool.shape))
 
             (mean, cov, N) = update_mean_cov(mean, cov, N, pool)
 

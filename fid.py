@@ -125,13 +125,12 @@ class FrechetInceptionDistance(object):
         The Frechet Inception Distance between the real and generated data.
     """
 
-    def __init__(self, generator, image_range, input_shape, batch_size,
+    def __init__(self, generator, image_range, input_shape,
                  generator_postprocessing=None):
 
         self._inception_v3 = None
         self.input_shape = input_shape
         self.generator = generator
-        self.batch_size = batch_size
         self.generator_postprocessing = generator_postprocessing
         self.image_range = image_range
         self._channels_axis = \
@@ -191,7 +190,6 @@ class FrechetInceptionDistance(object):
                  seed=None
                  ):
 
-        batch_size = self.batch_size
         if self._inception_v3 is None:
             self._setup_inception_network()
         (real_mean, real_cov) = self._stats(real_images,

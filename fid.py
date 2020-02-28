@@ -143,6 +143,7 @@ class FrechetInceptionDistance(object):
             img = cv2.merge([r, g, b])
             img_list.append(img)
         img_list = np.asarray(img_list)
+        img_list = tf.convert_to_tensor(img_list)
         return img_list
     def inception_score(self, pool_list):
         pool = np.asarray(pool_list)
@@ -150,9 +151,10 @@ class FrechetInceptionDistance(object):
         mean = tf.reduce_mean(pool, axis=0)
         mean = tf.reduce_mean(mean, axis=0)
         print(mean.shape)
+        print(mean)
         D_kl = tf.reduce_sum(pool*tf.math.log(pool/mean), axis=1)
         D_kl = tf.reduce_sum(D_kl, axis=0)
-        return tf.reduce_mean(tf.math.exp(D_kl), axis=0)
+        return tf.math.exp(tf.reduce_mean((D_kl), axis=0))
     def _setup_inception_network(self):
         self._inception_v3 = InceptionV3(
             include_top=False, pooling='avg', input_shape=self.input_shape)
@@ -223,7 +225,7 @@ class FrechetInceptionDistance(object):
             num_batches_gen = num_batches_real
         (gen_mean, gen_cov, inception_score) = self._stats(generator_inputs,
                                           "generated", batch_size=batch_size, num_batches=num_batches_gen,
-                                          postprocessing=None,
+                                          postprocessing=self.postprocessing,
                                           shuffle=shuffle, seed=seed)
         print('gen mean: {}, gen cov: {}'.format(gen_mean, gen_cov))
         return frechet_distance(real_mean, real_cov, gen_mean, gen_cov), inception_score

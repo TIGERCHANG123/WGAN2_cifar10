@@ -43,12 +43,12 @@ class discriminator_Input(tf.keras.Model):
     super(discriminator_Input, self).__init__()
     self.conv = keras.layers.Conv2D(filters, kernel_size=4, strides=strides, padding="same")
     self.leakyRelu = keras.layers.LeakyReLU(alpha=0.2)
-    self.dropout = keras.layers.Dropout(0.3)
+    # self.dropout = keras.layers.Dropout(0.3)
 
   def call(self, x):
     x = self.conv(x)
     x = self.leakyRelu(x)
-    x = self.dropout(x)
+    # x = self.dropout(x)
     return x
 
 class discriminator_Middle(tf.keras.Model):
@@ -57,13 +57,13 @@ class discriminator_Middle(tf.keras.Model):
       self.conv = tf.keras.layers.Conv2D(filters, kernel_size=4, strides=strides, padding=padding)
       self.bn = tf.keras.layers.BatchNormalization(momentum=0.9)
       self.leakyRelu = tf.keras.layers.LeakyReLU(alpha=0.2)
-      self.dropout = tf.keras.layers.Dropout(0.3)
+      # self.dropout = tf.keras.layers.Dropout(0.3)
 
   def call(self, x):
       x = self.conv(x)
       x = self.bn(x)
       x = self.leakyRelu(x)
-      x = self.dropout(x)
+      # x = self.dropout(x)
       return x
 
 class discriminator_Output_channel(tf.keras.Model):

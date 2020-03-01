@@ -14,7 +14,6 @@ class generator(tf.keras.Model):
     self.output_layer = generator_Output(image_depth=3, strides=2, padding='same')#3*32*32
   def call(self, x):
     x = self.input_layer(x)
-    # x = self.middle_layer1(x)
     for i in range(len(self.middle_layer_list)):
       x = self.middle_layer_list[i](x)
     x = self.output_layer(x)

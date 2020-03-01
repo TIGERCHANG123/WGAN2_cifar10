@@ -1,5 +1,7 @@
 # -*- coding:utf-8 -*-
 import os
+import getopt
+import sys
 import tensorflow as tf
 from WGAN import get_gan
 from show_pic import draw

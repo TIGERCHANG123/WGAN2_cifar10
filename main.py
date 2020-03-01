@@ -22,14 +22,14 @@ def main(continue_train, train_time):
     noise_dim = 100
     batch_size = 128
 
-    generator_model, discriminator_model, model_name = get_gan()
+    generator_model, discriminator_model, model_name = get_gan(noise_dim)
     dataset = mnist_dataset(dataset_root,batch_size = batch_size)
     model_dataset = model_name + '-' + dataset.name
 
     train_dataset = dataset.get_train_dataset()
     pic = draw(10, temp_root, model_dataset, train_time=train_time)
-    generator_optimizer = tf.keras.optimizers.RMSprop(5e-5)
-    discriminator_optimizer = tf.keras.optimizers.RMSprop(5e-5)
+    generator_optimizer = tf.keras.optimizers.Adam(1e-4, beta_1=0.5)
+    discriminator_optimizer = tf.keras.optimizers.Adam(1e-4, beta_1=0.5)
 
     checkpoint_path = temp_root + '/temp_model_save/' + model_dataset
     ckpt = tf.train.Checkpoint(genetator_optimizers=generator_optimizer, discriminator_optimizer=discriminator_optimizer ,
@@ -67,4 +67,4 @@ if __name__ == '__main__':
     config.gpu_options.allow_growth = True
     session = InteractiveSession(config=config)
 
-    main(continue_train=True, train_time=1)
+    main(continue_train=False, train_time=0)

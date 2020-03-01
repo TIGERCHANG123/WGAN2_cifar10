@@ -80,13 +80,15 @@ class train_one_epoch():
 
         i = 0
         for (batch, images) in enumerate(self.train_dataset):
-            i = i + 1
-            if (i+1) % 5 != 0:
-                noise = tf.random.normal([images.shape[0], self.noise_dim])
-                self.train_d_step(noise, images)
-            else:
-                noise = tf.random.normal([images.shape[0], self.noise_dim])
-                self.train_g_step(noise)
+            noise = tf.random.normal([images.shape[0], self.noise_dim])
+            self.train_step(noise, images)
+            # i = i + 1
+            # if (i+1) % 5 != 0:
+            #     noise = tf.random.normal([images.shape[0], self.noise_dim])
+            #     self.train_d_step(noise, images)
+            # else:
+            #     noise = tf.random.normal([images.shape[0], self.noise_dim])
+            #     self.train_g_step(noise)
             pic.add([self.gen_loss.result().numpy(), self.disc_loss.result().numpy()])
             pic.save()
             if batch % 100 == 0:

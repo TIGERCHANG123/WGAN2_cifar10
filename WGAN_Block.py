@@ -5,15 +5,15 @@ from tensorflow.keras import layers
 class generator_Input(tf.keras.Model):
   def __init__(self, shape, noise_dim):
     super(generator_Input, self).__init__()
-    # self.dense = layers.Dense(shape[0] * shape[1] * shape[2], use_bias=False)
-    self.reshape = layers.Reshape([1, 1, noise_dim])
-    # self.bn = layers.BatchNormalization(momentum=0.9)
-    # self.relu = tf.keras.layers.ReLU()
+    self.dense = layers.Dense(shape[0] * shape[1] * shape[2], use_bias=False)
+    self.reshape = layers.Reshape([shape[0], shape[1], shape[2]])
+    self.bn = layers.BatchNormalization(momentum=0.9)
+    self.relu = tf.keras.layers.ReLU()
   def call(self, x):
-    # x = self.dense(x)
+    x = self.dense(x)
     x = self.reshape(x)
-    # x = self.bn(x)
-    # x = self.relu(x)
+    x = self.bn(x)
+    x = self.relu(x)
     return x
 
 class generator_Middle(tf.keras.Model):

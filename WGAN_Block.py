@@ -1,6 +1,7 @@
 import tensorflow as tf
 from tensorflow import keras
 from tensorflow.keras import layers
+from tensorflow.keras.initializers import RandomNormal
 
 class generator_Input(tf.keras.Model):
   def __init__(self, shape, noise_dim):

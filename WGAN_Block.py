@@ -56,7 +56,7 @@ class discriminator_Middle(tf.keras.Model):
   def __init__(self, filters, strides, padding):
       super(discriminator_Middle, self).__init__()
       self.conv = tf.keras.layers.Conv2D(filters, kernel_size=4, strides=strides, padding=padding, kernel_initializer=RandomNormal(stddev=0.02))
-      self.ln = tf.keras.layers.LayerNormalization(momentum=0.9)
+      self.ln = tf.keras.layers.LayerNormalization()
       self.leakyRelu = tf.keras.layers.LeakyReLU(alpha=0.2)
       # self.dropout = tf.keras.layers.Dropout(0.3)
 
